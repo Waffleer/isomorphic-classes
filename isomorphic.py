@@ -1,4 +1,6 @@
 
+import threading
+
 def makeNodes(n):
     ret = []
     for x in range(0,n):
@@ -15,7 +17,9 @@ def makeLines(nodes):
 
 def makePaths(lines, n):
     ret = []
-    for k in range (n-1,len(lines)+1):
+    lenLines = len(lines)
+    for k in range (n-1,lenLines+1):
+        print(f"makePaths: k={k}/{lenLines}")
         __pathsRecurse(lines,"",-1,ret,k-1, False)
     '''
     k = 3
@@ -79,26 +83,37 @@ def __isGraphRecurse(path: list, nodes: list, foundNodes: list, a: int, DEBUG: b
         #if(DEBUG): print(f"a: {a} | t: {t}")
         __isGraphRecurse(path, nodes, foundNodes, x, DEBUG)
     
-def makeGraphs(paths, nodes):
+def makeGraphs(paths: list, nodes: list):
     ret = []
     pathLength = len(paths)
     for path in range(0, pathLength):
         if(__isGraph(paths[path], nodes)):
             ret.append(paths[path])
-            print(f"makeGraphs: ({path}/{pathLength})")
+            if(path%10000 == 0):
+                print(f"makeGraphs: ({path}/{pathLength})")
     return ret
+    
+
+
+
             
 f = open("isometricResults.txt", "a")
 
-n=0
+n=8
+lim = 8
 while(True):
-    nodes = makeNodes(n)
-    lines = makeLines(nodes)
-    paths = makePaths(lines, n)
-    graphs = makeGraphs(paths, nodes)
-
     print("- - - - - - - - - - - - - - - - - - - - - - - ")
-    print(f"n={n}\n#Nodes: {len(nodes)}\n#Lines: {len(lines)}\n#Paths: {len(paths)}\n#Graphs: {len(graphs)}")
+    nodes = makeNodes(n)
+    print(f"n={n}\n#Nodes: {len(nodes)}")
+    lines = makeLines(nodes)
+    print(f"#Lines: {len(lines)}")
+    paths = makePaths(lines, n)
+    print(f"#Paths: {len(paths)}")
+    graphs = makeGraphs(paths, nodes)
+    print(f"#Graphs: {len(graphs)}")
     f.write(f"n={n} | #Nodes: {len(nodes)} | #Lines: {len(lines)} | #Paths: {len(paths)} | #Graphs: {len(graphs)}\n")
+    
+    if(n==lim):
+        break
     n = n+1
 f.close()
