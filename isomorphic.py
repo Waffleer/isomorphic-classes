@@ -1,10 +1,3 @@
-n = 3
-
-
-
-
-
-
 
 def makeNodes(n):
     ret = []
@@ -20,22 +13,92 @@ def makeLines(nodes):
                 ret.append(f"{nodes[x]}-{nodes[y]}")
     return ret
 
-def makePaths(lines):
+def makePaths(lines, n):
     ret = []
-    #for x in range (1,len(lines)+1):
-       
+    for k in range (n-1,len(lines)+1):
+        __pathsRecurse(lines,"",-1,ret,k-1, False)
+    '''
+    k = 3
+    for x in range(0, len(lines)):
+        path = ""
+        a = lines[x]
+        path = path + f"-{a}"
+        for y in range (x+1, len(lines)):
+            path = f" {a}"
+            b = lines[y]
+            path = path + f" {b}"
+            for z in range (y+1, len(lines)):
+                path = f"{a} {b}"
+                c = lines[z]
+                path = path + f" {c}"
+                ret.append(path)
+    '''
     return ret
 
+def __pathsRecurse(lines, path: str, a: int, ret, ttl: int, DEBUG: bool):
+    for x in range(a+1, len(lines)):
+        if(DEBUG): print(f"x: {x} | a: {a} | ttl: {ttl} | path: {path}")
+        if(not ttl <= 0): # If not last element
+            __pathsRecurse(lines, (path + f" {lines[x]}"), x, ret, (ttl-1), DEBUG)
+        else:
+            if(DEBUG): print(f"Killed Thread | path: {(path + f' {lines[x]}')}")
+            ret.append((path + f" {lines[x]}"))
+          
 
-def isGraph(paths):
-    pass
+def __isGraph(path, nodes) -> bool:
+    #print(f"Path:  {path} | Nodes:  {nodes}")
+    path = path.strip().split(" ")
+    #print(f"Path:  {path} | Nodes:  {nodes}")
+    foundNodes = []
+    __isGraphRecurse(path, nodes, foundNodes, nodes[0], False)
+    #print(f"foundNodes:  {foundNodes}")
+    if(len(foundNodes) == len(nodes)): return True
+    else: return False
+    
+def __isGraphRecurse(path: list, nodes: list, foundNodes: list, a: int, DEBUG: bool) -> None:
+    active = []
+    if(a not in foundNodes): foundNodes.append(a)
+    
+    if(DEBUG): print("- - - - - - - - - - - - - ")
+    #print(f"PRE| path: {path} | nodes: {nodes} | foundNodes: {foundNodes} | a: {a} | active: {active}")
+    if(DEBUG): print(f"PRE| foundNodes: {foundNodes} | a: {a} | active: {active}")
+    for line in path:
+        l = line.split("-")
+        if(int(a) == int(l[0])): # Gets target if current node is in a part of the line
+            t = int(l[1])
+            if(t not in foundNodes): active.append(t)
+        elif(int(a) == int(l[1])):
+            t = int(l[0])
+            if(t not in foundNodes): active.append(t)
+        else:
+            continue
+    
+    #print(f"POST| path: {path} | nodes: {nodes} | foundNodes: {foundNodes} | a: {a} | active: {active}")
+    if(DEBUG): print(f"POST| foundNodes: {foundNodes} | a: {a} | active: {active}")
+    for x in active:
+        #if(DEBUG): print(f"a: {a} | t: {t}")
+        __isGraphRecurse(path, nodes, foundNodes, x, DEBUG)
+    
+def makeGraphs(paths, nodes):
+    ret = []
+    pathLength = len(paths)
+    for path in range(0, pathLength):
+        if(__isGraph(paths[path], nodes)):
+            ret.append(paths[path])
+            print(f"makeGraphs: ({path}/{pathLength})")
+    return ret
+            
+f = open("isometricResults.txt", "a")
 
-nodes = makeNodes(n)
-print(nodes)
-lines = makeLines(nodes)
-print(lines)
-paths = makePaths(lines)
-print(paths)
-nodes = []
-lines = []
-paths = []
+n=0
+while(True):
+    nodes = makeNodes(n)
+    lines = makeLines(nodes)
+    paths = makePaths(lines, n)
+    graphs = makeGraphs(paths, nodes)
+
+    print("- - - - - - - - - - - - - - - - - - - - - - - ")
+    print(f"n={n}\n#Nodes: {len(nodes)}\n#Lines: {len(lines)}\n#Paths: {len(paths)}\n#Graphs: {len(graphs)}")
+    f.write(f"n={n} | #Nodes: {len(nodes)} | #Lines: {len(lines)} | #Paths: {len(paths)} | #Graphs: {len(graphs)}\n")
+    n = n+1
+f.close()
