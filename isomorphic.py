@@ -43,7 +43,7 @@ def __pathsRecurse(lines, path: str, a: int, ret, ttl: int, DEBUG: bool):
         else:
             if(DEBUG): print(f"Killed Thread | path: {(path + f' {lines[x]}')}")
             ret.append((path + f" {lines[x]}"))
-          
+            
 
 '''
 def __isGraph(path, nodes) -> bool:
