@@ -1,9 +1,8 @@
-n=0 | #Nodes: 0 | #Lines: 0 | #Paths: 0 | #Graphs: 0
-n=1 | #Nodes: 1 | #Lines: 0 | #Paths: 0 | #Graphs: 0
-n=2 | #Nodes: 2 | #Lines: 1 | #Paths: 1 | #Graphs: 1
-n=3 | #Nodes: 3 | #Lines: 3 | #Paths: 4 | #Graphs: 4
-n=4 | #Nodes: 4 | #Lines: 6 | #Paths: 42 | #Graphs: 38
-n=5 | #Nodes: 5 | #Lines: 10 | #Paths: 848 | #Graphs: 728
-n=6 | #Nodes: 6 | #Lines: 15 | #Paths: 30827 | #Graphs: 26704
-n=7 | #Nodes: 7 | #Lines: 21 | #Paths: 2069256 | #Graphs: 1866256
-n=8 | #Nodes: 8 | #Lines: 28 | #Paths: 267936278 | #Graphs: 251548592
+n=1 | #Nodes: 1 | #Lines: 0 | #Paths: 0 | #Classes: 1
+n=2 | #Nodes: 2 | #Lines: 1 | #Paths: 1 | #Classes: 2
+n=3 | #Nodes: 3 | #Lines: 3 | #Paths: 7 | #Classes: 4
+n=4 | #Nodes: 4 | #Lines: 6 | #Paths: 63 | #Classes: 11
+n=5 | #Nodes: 5 | #Lines: 10 | #Paths: 1023 | #Classes: 31
+n=6 | #Nodes: 6 | #Lines: 15 | #Paths: 32767 | #Classes: 102
+n=7 | #Nodes: 7 | #Lines: 21 | #Paths: 2097151 | #Classes: 342
+n=8 | #Nodes: 8 | #Lines: 28 | #Paths: 268435455 | #Classes: 1213

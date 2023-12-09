@@ -1,6 +1,3 @@
-
-import threading
-
 def makeNodes(n):
     ret = []
     for x in range(0,n):
@@ -16,9 +13,9 @@ def makeLines(nodes):
     return ret
 
 def makePaths(lines, n):
-    ret = []
+    ret = [] #blank = graph with no edges
     lenLines = len(lines)
-    for k in range (n-1,lenLines+1):
+    for k in range (1,lenLines+1):
         print(f"makePaths: k={k}/{lenLines}")
         __pathsRecurse(lines,"",-1,ret,k-1, False)
     '''
@@ -38,7 +35,6 @@ def makePaths(lines, n):
                 ret.append(path)
     '''
     return ret
-
 def __pathsRecurse(lines, path: str, a: int, ret, ttl: int, DEBUG: bool):
     for x in range(a+1, len(lines)):
         if(DEBUG): print(f"x: {x} | a: {a} | ttl: {ttl} | path: {path}")
@@ -49,6 +45,7 @@ def __pathsRecurse(lines, path: str, a: int, ret, ttl: int, DEBUG: bool):
             ret.append((path + f" {lines[x]}"))
           
 
+'''
 def __isGraph(path, nodes) -> bool:
     #print(f"Path:  {path} | Nodes:  {nodes}")
     path = path.strip().split(" ")
@@ -58,7 +55,6 @@ def __isGraph(path, nodes) -> bool:
     #print(f"foundNodes:  {foundNodes}")
     if(len(foundNodes) == len(nodes)): return True
     else: return False
-    
 def __isGraphRecurse(path: list, nodes: list, foundNodes: list, a: int, DEBUG: bool) -> None:
     active = []
     if(a not in foundNodes): foundNodes.append(a)
@@ -82,7 +78,6 @@ def __isGraphRecurse(path: list, nodes: list, foundNodes: list, a: int, DEBUG: b
     for x in active:
         #if(DEBUG): print(f"a: {a} | t: {t}")
         __isGraphRecurse(path, nodes, foundNodes, x, DEBUG)
-    
 def makeGraphs(paths: list, nodes: list):
     ret = []
     pathLength = len(paths)
@@ -92,26 +87,76 @@ def makeGraphs(paths: list, nodes: list):
             if(path%10000 == 0):
                 print(f"makeGraphs: ({path}/{pathLength})")
     return ret
-    
+'''   
 
+def findClasses(paths, nodes):
+    ret = {}
+    for path in paths:
+        #print(f"paths: {path}")
+        path = path.strip().split(" ")
+        comps = {}
+        for x in nodes:
+            comps.update({str(x): 0})
 
+        
+        for line in path: #Splits line into multiple components #Works
+            c = line.split("-")
+            comps.update({str(c[0]): comps[str(c[0])]+1})
+            comps.update({str(c[1]): comps[str(c[1])]+1})
+
+        #print(f"comps:  {comps}")
+
+        values = list(comps.values())
+        linesPerNode = [values[0]]
+        for x in range(1, len(values)): #Takes number of lines per node and orders greatest to least
+            for v in range(0, len(linesPerNode)):
+                #print(f"x:{x} | v:{v} | values[x]:{values[x]} | linesPerNode[v]:{linesPerNode[v]} | linesPerNode:{linesPerNode}")
+                if(values[x] >= linesPerNode[v]):
+                    #print("insert")
+                    linesPerNode.insert(v,values[x])
+                    break
+                #print(f"v: {v} | len: {len(linesPerNode)-1}")
+                if(v == len(linesPerNode)-1):
+                    #print(f"append")
+                    linesPerNode.append(values[x])
+
+                
+
+        #print(f"linesPerNode: {linesPerNode}")
+
+        #continue
+        
+        if(str(comps) in ret.keys()):
+            ret.update({str(linesPerNode): ret[str(linesPerNode)]+1})
+        else:
+            ret.update({str(linesPerNode): 1})
+        #print(f"ret:  {ret}")
+        #print("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
+        #break
+    return ret
 
             
 f = open("isometricResults.txt", "a")
 
-n=8
+n=8 #Doesn't work for n=0
 lim = 8
 while(True):
-    print("- - - - - - - - - - - - - - - - - - - - - - - ")
+    print("- - - - - - - - - - - - - - - - - - - - - - -")
     nodes = makeNodes(n)
     print(f"n={n}\n#Nodes: {len(nodes)}")
     lines = makeLines(nodes)
     print(f"#Lines: {len(lines)}")
     paths = makePaths(lines, n)
     print(f"#Paths: {len(paths)}")
-    graphs = makeGraphs(paths, nodes)
-    print(f"#Graphs: {len(graphs)}")
-    f.write(f"n={n} | #Nodes: {len(nodes)} | #Lines: {len(lines)} | #Paths: {len(paths)} | #Graphs: {len(graphs)}\n")
+    classes = findClasses(paths, nodes)
+    print(f"#classes:  {len(list(classes.values()))+1}") # '+1' deals with a graph with no edges
+
+
+
+
+    #graphs = makeGraphs(paths, nodes)
+    #print(f"#Graphs: {len(graphs)}")
+    f.write(f"n={n} | #Nodes: {len(nodes)} | #Lines: {len(lines)} | #Paths: {len(paths)} | #Classes: {len(list(classes.values()))+1}\n")
     
     if(n==lim):
         break
