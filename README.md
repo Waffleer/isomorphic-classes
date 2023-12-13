@@ -1,2 +1,3 @@
 # isomorphic classes
  
+For the finding of isomorphic classes we found that the number of isomorphic classes scales considerably with the number of nodes you have. In terms of speed the program is not very memory efficient and significant slow down happens when the ram is full, around n=8 for 32 gb. This program is a brute force algorithm and the amount of options and for n=8 the program needs to run 268,435,455 times twice to both make this list and to run code for ever one on it. n=9 may take days on my computer as n=9 will likely have at least 100 times more paths possible. Their are likely more efficient ways to solve this problem that doesn't take 22gb of ram but this code did suffice for this project.
